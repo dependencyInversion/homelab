@@ -45,7 +45,8 @@ services:
     ports:
       - "8080:8080/tcp"
     volumes:
-      - './homer/data:/data'
+      - './homer/assets:/www/assets'
+    restart: unless-stopped
 
   nextcloud:
     container_name: nextcloud
