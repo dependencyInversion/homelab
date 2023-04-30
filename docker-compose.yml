@@ -1,0 +1,89 @@
+version: '3'
+
+services:
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    environment:
+      - TZ=America/New_York
+      - ServerIP=192.168.1.2
+      - WEBPASSWORD=password
+    volumes:
+      - './pihole/etc-pihole/:/etc/pihole/'
+      - './pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/'
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:latest
+    ports:
+      - "9000:9000/tcp"
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+
+  yacht:
+    container_name: yacht
+    image: selfhostedpro/yacht:latest
+    ports:
+      - "8000:8000/tcp"
+    volumes:
+      - './yacht:/config'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+
+  homer:
+    container_name: homer
+    image: b4bz/homer:latest
+    ports:
+      - "8080:8080/tcp"
+    volumes:
+      - './homer/data:/data'
+
+  nextcloud:
+    container_name: nextcloud
+    image: nextcloud:latest
+    ports:
+      - "8001:80/tcp"
+    volumes:
+      - './nextcloud/data:/var/www/html/data'
+    environment:
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=password
+      - MYSQL_HOST=mariadb
+    depends_on:
+      - mariadb
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:latest
+    volumes:
+      - './mariadb/data:/var/lib/mysql'
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=password
+
+  wireguard:
+    container_name: wireguard
+    image: linuxserver/wireguard:latest
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - './wireguard/config:/config'
+      - '/lib/modules:/lib/modules'
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv6.conf.all.disable_ipv6=0
+    ports:
+      - "51820:51820/udp"
+
