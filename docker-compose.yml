@@ -6,6 +6,8 @@ services:
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
+    hostname: pi.hole
+    domainname: local
     ports:
       # DNS Ports
       - "53:53/tcp"
