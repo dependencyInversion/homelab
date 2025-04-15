@@ -119,7 +119,7 @@ services:
     items:
       - name: "Pi-hole"
         logo: "assets/tools/pi-hole.webp"
-        url: "http://docker-pi.local:80"
+        url: "http://docker-pi.local:80/admin/login"
         type: "PiHole"
       - name: "Nextcloud"
         logo: "assets/tools/nextcloud.png"
