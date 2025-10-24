@@ -1,0 +1,6 @@
+---
+- name: Deploy compose app host(s)
+  hosts: servers
+  become: yes
+  roles:
+    - role: compose_app

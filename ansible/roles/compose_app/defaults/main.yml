@@ -1,0 +1,21 @@
+# Public repo to deploy
+compose_repo_url: "https://github.com/dependencyInversion/homelab"
+# Branch / tag / commit
+compose_repo_version: "main"
+
+# Where to deploy the repo
+compose_app_dir: "/opt/homelab-app"
+
+# Name for the systemd unit
+compose_service_name: "homelab-app"
+
+# Optional: which user should own the working dir and run docker (must exist)
+compose_run_user: "{{ ansible_user }}"
+compose_run_group: "{{ compose_run_user }}"
+
+# If your repo uses a non-default filename, set it here (relative to compose_app_dir)
+compose_file: "docker-compose.yml"
+
+# Environment file (optional, if your repo needs it)
+# compose_env_file: ".env"   # set to "" to skip ensuring it
+compose_env_vars: {}       # key: value pairs to render into .env

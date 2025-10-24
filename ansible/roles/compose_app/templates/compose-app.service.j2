@@ -1,0 +1,25 @@
+[Unit]
+Description=Docker Compose App - {{ compose_service_name }}
+Requires=docker.service network-online.target
+After=docker.service network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User={{ compose_run_user }}
+Group={{ compose_run_group }}
+WorkingDirectory={{ compose_app_dir }}
+Environment="COMPOSE_FILE={{ compose_file }}"
+{% if compose_env_file | length > 0 %}
+Environment="ENV_FILE={{ compose_env_file }}"
+{% endif %}
+# Pull latest images before starting
+ExecStartPre=/usr/bin/docker compose pull
+# Start in detached mode
+ExecStart=/usr/bin/docker compose up -d
+# Stop cleanly
+ExecStop=/usr/bin/docker compose down
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
