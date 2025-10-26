@@ -86,6 +86,8 @@
     groups: docker
     append: yes
 
+- include_tasks: bpytop.yml
+
 - name: Create app directory
   ansible.builtin.file:
     path: "{{ compose_app_dir }}"
