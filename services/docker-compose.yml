@@ -70,7 +70,7 @@ services:
     ports:
       - "8080:8080/tcp"
     volumes:
-      - './services/homer/assets:/www/assets'
+      - './homer/assets:/www/assets'
     restart: unless-stopped
 
   # Source: https://github.com/docker/awesome-compose/tree/master/nextcloud-postgres
