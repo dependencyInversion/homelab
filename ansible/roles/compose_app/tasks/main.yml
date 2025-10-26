@@ -13,6 +13,7 @@
       - lsb-release
     state: present
     update_cache: yes
+    cache_valid_time: 3600
   when: ansible_os_family == "Debian"
 
 - name: Ensure /etc/apt/keyrings exists
@@ -70,3 +71,69 @@
     state: present
     update_cache: yes
   when: ansible_os_family == "Debian"
+
+# For RHEL-like, you could add tasks to enable docker-ce repo and install the same package names.
+
+- name: Ensure docker service is enabled and running
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Add user to docker group (no sudo for compose)
+  ansible.builtin.user:
+    name: "{{ compose_run_user }}"
+    groups: docker
+    append: yes
+
+- name: Create app directory
+  ansible.builtin.file:
+    path: "{{ compose_app_dir }}"
+    state: directory
+    owner: "{{ compose_run_user }}"
+    group: "{{ compose_run_group }}"
+    mode: "0755"
+
+- name: Clone / update the compose repo
+  ansible.builtin.git:
+    repo: "{{ compose_repo_url }}"
+    dest: "{{ compose_app_dir }}"
+    version: "{{ compose_repo_version }}"
+    force: yes
+    update: yes
+  register: repo_sync
+
+- name: Ensure optional .env file
+  when: compose_env_file | length > 0
+  ansible.builtin.copy:
+    dest: "{{ compose_app_dir }}/{{ compose_env_file }}"
+    content: |
+      {% for k, v in compose_env_vars.items() %}
+      {{ k }}={{ v }}
+      {% endfor %}
+    owner: "{{ compose_run_user }}"
+    group: "{{ compose_run_group }}"
+    mode: "0640"
+
+- name: Install systemd unit for the compose app
+  ansible.builtin.template:
+    src: compose-app.service.j2
+    dest: "/etc/systemd/system/{{ compose_service_name }}.service"
+    mode: "0644"
+  register: unit_file
+
+- name: systemd daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: yes
+  when: unit_file.changed
+
+- name: Enable service (start at boot)
+  ansible.builtin.service:
+    name: "{{ compose_service_name }}"
+    enabled: yes
+
+- name: Start or restart service when repo or unit changed
+  ansible.builtin.service:
+    name: "{{ compose_service_name }}"
+    state: restarted
+  when: repo_sync.after is defined and (repo_sync.after != repo_sync.before or unit_file.changed)

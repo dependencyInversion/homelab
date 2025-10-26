@@ -21,10 +21,11 @@ services:
     environment:
       # Set the appropriate timezone for your location (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), e.g:
       TZ: 'Europe/Berlin'
-      # Set a password to access the web interface. Not setting one will result in a random password being assigned
-      FTLCONF_webserver_api_password: 'Fragrant-Stump-Laboring-4$'
+      WEBPASSWORD_FILE: pihole_webpasswd
       # If using Docker's default `bridge` network setting the dns listening mode should be set to 'all'
       FTLCONF_dns_listeningMode: 'all'
+    secrets:
+      - pihole_webpasswd
     # Volumes store your data between container upgrades
     volumes:
       # For persisting Pi-hole's databases and common configuration file
@@ -69,7 +70,7 @@ services:
     ports:
       - "8080:8080/tcp"
     volumes:
-      - './homer/assets:/www/assets'
+      - './services/homer/assets:/www/assets'
     restart: unless-stopped
 
   # Source: https://github.com/docker/awesome-compose/tree/master/nextcloud-postgres
@@ -130,3 +131,7 @@ volumes:
   db_data:
   nc_data:
   portainer_data:
+
+secrets:
+  pihole_webpasswd:
+    file: ./pihole_password.txt

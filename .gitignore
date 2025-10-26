@@ -1,5 +1,9 @@
-yacht/
-etc-pihole/
-mariadb/
-wireguard/
-nextcloud/
+### Ansible ###
+*.retry
+
+**/yacht/
+**/etc-pihole/
+**/mariadb/
+**/wireguard/
+**/nextcloud/
+**/pihole_password.txt
