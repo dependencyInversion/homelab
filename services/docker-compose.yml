@@ -74,31 +74,31 @@ services:
     restart: unless-stopped
 
   # Source: https://github.com/docker/awesome-compose/tree/master/nextcloud-postgres
-  nextcloud:
-    image: nextcloud:apache
-    container_name: nextcloud
-    environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_PASSWORD=nextcloud
-      - POSTGRES_DB=nextcloud
-      - POSTGRES_USER=nextcloud
-    ports:
-      - 8081:80
-    restart: always
-    volumes:
-      - nc_data:/var/www/html
-  db:
-    image: postgres:alpine
-    container_name: nextcloud_db
-    environment:
-      - POSTGRES_PASSWORD=nextcloud
-      - POSTGRES_DB=nextcloud
-      - POSTGRES_USER=nextcloud
-    restart: always
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    expose:
-      - 5432
+  # nextcloud:
+  #   image: nextcloud:apache
+  #   container_name: nextcloud
+  #   environment:
+  #     - POSTGRES_HOST=db
+  #     - POSTGRES_PASSWORD=nextcloud
+  #     - POSTGRES_DB=nextcloud
+  #     - POSTGRES_USER=nextcloud
+  #   ports:
+  #     - 8081:80
+  #   restart: always
+  #   volumes:
+  #     - nc_data:/var/www/html
+  # db:
+  #   image: postgres:alpine
+  #   container_name: nextcloud_db
+  #   environment:
+  #     - POSTGRES_PASSWORD=nextcloud
+  #     - POSTGRES_DB=nextcloud
+  #     - POSTGRES_USER=nextcloud
+  #   restart: always
+  #   volumes:
+  #     - db_data:/var/lib/postgresql/data
+  #   expose:
+  #     - 5432
 
   # Source: https://github.com/docker/awesome-compose/tree/master/wireguard
   wireguard:
