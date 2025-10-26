@@ -119,18 +119,18 @@ services:
     items:
       - name: "Pi-hole"
         logo: "assets/tools/pi-hole.webp"
-        url: "http://docker-pi.local:80/admin/login"
+        url: "http://raspberrypi.local:80/admin/login"
         type: "PiHole"
       - name: "Nextcloud"
         logo: "assets/tools/nextcloud.png"
-        url: "http://docker-pi.local:8001"
+        url: "http://raspberrypi.local:8001"
   - name: "Container Orchestration"
     icon: "fas fa-anchor" # https://fontawesome.com/
     items:
       - name: "Yacht"
         logo: "assets/tools/yacht.png"
-        url: "http://docker-pi.local:8000"
+        url: "http://raspberrypi.local:8000"
       - name: "Portainer"
         logo: "assets/tools/portainer.png"
-        url: "http://docker-pi.local:9000/"
+        url: "http://raspberrypi.local:9000/"
         type: "Portainer"
